@@ -1113,112 +1113,96 @@
 
     document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
 
-    const bgMusic = document.getElementById('bgMusic');
-    const musicPanel = document.getElementById('musicPanel');
-    const musicToggleBtn = document.getElementById('musicToggleBtn');
-    const toggleMusicBtn = document.getElementById('toggleMusicBtn');
-    const playMusicBtn = document.getElementById('playMusicBtn');
-    const musicStatus = document.getElementById('musicStatus');
+   <!-- 只貼關鍵修改區（你原本檔案其他都不要動） -->
 
-    let musicEnabled = true;
+<!-- ✅ 音樂區（HTML） -->
+<audio id="bgMusic" preload="metadata"></audio>
 
-    const setStatus = (text) => {
-      musicStatus.textContent = text;
-    };
+<script>
+const bgMusic = document.getElementById('bgMusic');
+const musicPanel = document.getElementById('musicPanel');
+const musicToggleBtn = document.getElementById('musicToggleBtn');
+const toggleMusicBtn = document.getElementById('toggleMusicBtn');
+const playMusicBtn = document.getElementById('playMusicBtn');
+const musicStatus = document.getElementById('musicStatus');
 
-    const updateToggleText = () => {
-      toggleMusicBtn.textContent = musicEnabled ? '關閉音樂' : '開啟音樂';
-    };
+let musicEnabled = true;
 
-    const tryPlayMusic = async () => {
-      try {
-        await bgMusic.play();
-        setStatus('目前歌曲：' + playlist[currentTrack].name + '。');
-      } catch (error) {
-        setStatus('瀏覽器目前阻擋自動播放，請按「播放 / 暫停」開始播放。');
-      }
-    };
+const setStatus = (text) => {
+  musicStatus.textContent = text;
+};
 
-    const playlist = [
-      { src: "./mp3/song1.mp3", name: "留下一命給眾生" },
-      { src: "./mp3/song2.mp3", name: "為愛而改變" },
-      { src: "./mp3/song3.mp3", name: "一口植物蛋白一口善" }
-    ];
-    let currentTrack = 0;
+const updateToggleText = () => {
+  toggleMusicBtn.textContent = musicEnabled ? '關閉音樂' : '開啟音樂';
+};
 
-    const loadTrack = (index) => {
-      currentTrack = index;
-      bgMusic.src = playlist[currentTrack].src;
-      setStatus('目前歌曲：' + playlist[currentTrack].name + '。若瀏覽器阻擋自動播放，請按「播放 / 暫停」。');
-    };
+<!-- ✅ 播放清單 -->
+const playlist = [
+  { src: "./mp3/song1.mp3", name: "留下一命給眾生" },
+  { src: "./mp3/song2.mp3", name: "為愛而改變" },
+  { src: "./mp3/song3.mp3", name: "一口植物蛋白一口善" }
+];
 
-    bgMusic.addEventListener('ended', async () => {
-      const nextIndex = (currentTrack + 1) % playlist.length;
-      loadTrack(nextIndex);
-      if (musicEnabled) {
-        try {
-          await bgMusic.play();
-          setStatus('目前歌曲：' + playlist[currentTrack].name + '。');
-        } catch (error) {
-          setStatus('已切換到：' + playlist[currentTrack].name + '。請按「播放 / 暫停」開始播放。');
-        }
-      }
-    });
+let currentTrack = 0;
+bgMusic.src = playlist[currentTrack].src;
 
-    bgMusic.volume = 0.4;
-    loadTrack(0);
+<!-- ✅ 播放控制 -->
+const tryPlayMusic = async () => {
+  try {
+    await bgMusic.play();
+    setStatus("正在播放：" + playlist[currentTrack].name);
+  } catch (error) {
+    setStatus('瀏覽器阻擋自動播放，請按播放');
+  }
+};
+
+bgMusic.volume = 0.4;
+updateToggleText();
+
+toggleMusicBtn.addEventListener('click', async () => {
+  musicEnabled = !musicEnabled;
+  updateToggleText();
+
+  if (musicEnabled) {
+    await tryPlayMusic();
+  } else {
+    bgMusic.pause();
+    setStatus('背景音樂已關閉');
+  }
+});
+
+playMusicBtn.addEventListener('click', async () => {
+  if (bgMusic.paused) {
+    musicEnabled = true;
     updateToggleText();
+    await tryPlayMusic();
+  } else {
+    bgMusic.pause();
+    setStatus('背景音樂已暫停');
+  }
+});
 
-    toggleMusicBtn.addEventListener('click', async () => {
-      musicEnabled = !musicEnabled;
-      updateToggleText();
+musicToggleBtn.addEventListener('click', () => {
+  musicPanel.classList.toggle('open');
+});
 
-      if (musicEnabled) {
-        await tryPlayMusic();
-      } else {
-        bgMusic.pause();
-        setStatus('背景音樂已關閉。');
-      }
-    });
+window.addEventListener('click', async () => {
+  if (bgMusic.paused && musicEnabled) {
+    tryPlayMusic();
+  }
+}, { once: true });
 
-    playMusicBtn.addEventListener('click', async () => {
-      if (bgMusic.paused) {
-        musicEnabled = true;
-        updateToggleText();
-        await tryPlayMusic();
-      } else {
-        bgMusic.pause();
-        setStatus('背景音樂已暫停。');
-      }
-    });
+<!-- ✅ 自動下一首 -->
+bgMusic.addEventListener("ended", () => {
+  currentTrack++;
+  if (currentTrack >= playlist.length) currentTrack = 0;
 
-    musicToggleBtn.addEventListener('click', () => {
-      musicPanel.classList.toggle('open');
-    });
+  bgMusic.src = playlist[currentTrack].src;
+  bgMusic.play();
 
-    window.addEventListener('click', async () => {
-      if (bgMusic.paused && musicEnabled) {
-        tryPlayMusic();
-      }
-    }, { once: true });
-
-    document.querySelectorAll('.video-card').forEach((card) => {
-      card.addEventListener('click', () => {
-        const videoId = card.dataset.youtubeId;
-        if (!videoId || videoId.includes('YOUR_VIDEO_ID')) return;
-
-        card.innerHTML = `
-          <div class="video-embed">
-            <iframe
-              src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0"
-              title="YouTube video player"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowfullscreen>
-            </iframe>
-          </div>
-        `;
-      }, { once: true });
-    });
+  setStatus("正在播放：" + playlist[currentTrack].name);
+});
+</script>
   </script>
 </body>
 </html>
