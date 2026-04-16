@@ -500,7 +500,7 @@
     }
 
     .cta-wrap {
-      text-align: center;
+      text-align: left;
       max-width: 780px;
       margin: 0 auto;
     }
@@ -828,6 +828,102 @@
         width: 100%;
       }
     }
+
+    .music-select-row {
+      display: block;
+      margin-top: 4px;
+    }
+
+    .track-select {
+      width: 100%;
+      min-width: 0;
+      height: 52px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.10);
+      color: #fff;
+      padding: 0 16px;
+      font-size: 16px;
+      outline: none;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+      cursor: pointer;
+    }
+
+    .track-select option {
+      color: #111;
+    }
+
+    .music-toggle {
+      right: 16px;
+      bottom: 16px;
+      width: 62px;
+      height: 62px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #9fca46, #7ea33d);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.26);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .music-toggle:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 32px rgba(0,0,0,0.3);
+    }
+
+    .music-toggle svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .music-panel {
+      right: 16px;
+      bottom: 88px;
+      width: 300px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(18,38,20,0.98), rgba(10,24,12,0.96));
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .music-head {
+      padding: 16px 18px 10px;
+    }
+
+    .music-title {
+      font-size: 18px;
+    }
+
+    .music-sub {
+      font-size: 13px;
+    }
+
+    .music-body {
+      padding: 0 18px 18px;
+      gap: 12px;
+    }
+
+    .music-actions.single {
+      grid-template-columns: 1fr;
+    }
+
+    .music-btn {
+      min-height: 50px;
+      font-size: 16px;
+      border-radius: 16px;
+    }
+
+    .music-status {
+      min-height: 20px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.82);
+    }
+
+    @media (max-width: 480px) {
+      .music-panel {
+        right: 10px;
+        bottom: 82px;
+        width: calc(100vw - 20px);
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -1006,7 +1102,7 @@
   <section class="cta-band fade-up">
     <div class="container cta-wrap">
       <h2 class="section-title" style="margin:0 0 6px;">你不需要完美，只需要一個開始</h2>
-      <p>這一餐，讓他活下來。也是讓你的選擇，變得更溫柔一點。</p>
+      <p>這一餐，讓牠活下來。<br>也是讓你的選擇，變得更溫柔一點。</p>
     </div>
   </section>
 
@@ -1067,16 +1163,22 @@
     <div class="music-head">
       <div>
         <p class="music-title">背景音樂</p>
-        <p class="music-sub">可播放、暫停，預設放一首最穩定</p>
+        <p class="music-sub">選歌後可播放 / 暫停</p>
       </div>
       <span aria-hidden="true">♪</span>
     </div>
     <div class="music-body">
-      <div class="music-actions">
-        <button id="toggleMusicBtn" class="music-btn music-btn-primary" type="button">關閉音樂</button>
-        <button id="playMusicBtn" class="music-btn music-btn-secondary" type="button">播放 / 暫停</button>
+      <div class="music-select-row">
+        <select id="trackSelect" class="track-select">
+          <option value="0" selected>留下一命給眾生</option>
+          <option value="1">為愛而改變</option>
+          <option value="2">一口植物蛋白一口善</option>
+        </select>
       </div>
-      <p id="musicStatus" class="music-status">網站開啟時會嘗試播放背景音樂；若瀏覽器阻擋，請手動按播放。</p>
+      <div class="music-actions single">
+        <button id="playPauseBtn" class="music-btn music-btn-primary" type="button">播放</button>
+      </div>
+      <p id="musicStatus" class="music-status">已選擇：留下一命給眾生</p>
       <audio id="bgMusic" preload="metadata"></audio>
     </div>
   </div>
@@ -1115,9 +1217,9 @@
 const bgMusic = document.getElementById('bgMusic');
 const musicPanel = document.getElementById('musicPanel');
 const musicToggleBtn = document.getElementById('musicToggleBtn');
-const toggleMusicBtn = document.getElementById('toggleMusicBtn');
-const playMusicBtn = document.getElementById('playMusicBtn');
 const musicStatus = document.getElementById('musicStatus');
+const trackSelect = document.getElementById('trackSelect');
+const playPauseBtn = document.getElementById('playPauseBtn');
 
 const playlist = [
   { src: "./mp3/song1.mp3", name: "留下一命給眾生" },
@@ -1126,79 +1228,88 @@ const playlist = [
 ];
 
 let currentTrack = 0;
-let musicEnabled = true;
 
 const setStatus = (text) => {
-  musicStatus.textContent = text;
+  if (musicStatus) musicStatus.textContent = text;
 };
 
-const updateToggleText = () => {
-  toggleMusicBtn.textContent = musicEnabled ? '關閉音樂' : '開啟音樂';
+const updatePlayPauseText = () => {
+  if (!playPauseBtn) return;
+  playPauseBtn.textContent = bgMusic.paused ? '播放' : '暫停';
 };
 
 const loadTrack = (index) => {
   currentTrack = index;
   bgMusic.src = playlist[currentTrack].src;
-  setStatus("正在播放：" + playlist[currentTrack].name);
+  bgMusic.load();
+  setStatus('已選擇：' + playlist[currentTrack].name);
 };
 
-const tryPlayMusic = async () => {
+const playCurrentTrack = async () => {
   try {
+    if (!bgMusic.src) loadTrack(currentTrack);
     await bgMusic.play();
-    setStatus("正在播放：" + playlist[currentTrack].name);
+    updatePlayPauseText();
+    setStatus('正在播放：' + playlist[currentTrack].name);
   } catch (error) {
-    setStatus('瀏覽器阻擋自動播放，請按「播放 / 暫停」開始播放。');
+    setStatus('播放失敗，請確認 mp3 資料夾與檔名是否正確');
   }
 };
 
 bgMusic.volume = 0.4;
 loadTrack(0);
-updateToggleText();
+updatePlayPauseText();
 
-toggleMusicBtn.addEventListener('click', async () => {
-  musicEnabled = !musicEnabled;
-  updateToggleText();
+if (musicToggleBtn && musicPanel) {
+  musicToggleBtn.addEventListener('click', () => {
+    musicPanel.classList.toggle('open');
+  });
+}
 
-  if (musicEnabled) {
-    await tryPlayMusic();
-  } else {
-    bgMusic.pause();
-    setStatus('背景音樂已關閉。');
-  }
+if (trackSelect) {
+  trackSelect.addEventListener('change', async (e) => {
+    const selectedIndex = Number(e.target.value);
+    loadTrack(selectedIndex);
+    await playCurrentTrack();
+  });
+}
+
+if (playPauseBtn) {
+  playPauseBtn.addEventListener('click', async () => {
+    if (bgMusic.paused) {
+      await playCurrentTrack();
+    } else {
+      bgMusic.pause();
+      updatePlayPauseText();
+      setStatus('背景音樂已暫停');
+    }
+  });
+}
+
+bgMusic.addEventListener('play', updatePlayPauseText);
+bgMusic.addEventListener('pause', updatePlayPauseText);
+
+bgMusic.addEventListener('error', () => {
+  setStatus('音樂檔讀取失敗，請確認 ./mp3/song1.mp3 等路徑是否存在');
 });
-
-playMusicBtn.addEventListener('click', async () => {
-  if (bgMusic.paused) {
-    musicEnabled = true;
-    updateToggleText();
-    await tryPlayMusic();
-  } else {
-    bgMusic.pause();
-    setStatus('背景音樂已暫停。');
-  }
-});
-
-musicToggleBtn.addEventListener('click', () => {
-  musicPanel.classList.toggle('open');
-});
-
-window.addEventListener('click', async () => {
-  if (bgMusic.paused && musicEnabled) {
-    await tryPlayMusic();
-  }
-}, { once: true });
 
 bgMusic.addEventListener('ended', async () => {
   let nextTrack = currentTrack + 1;
   if (nextTrack >= playlist.length) nextTrack = 0;
   loadTrack(nextTrack);
-  await tryPlayMusic();
+  await playCurrentTrack();
 });
 
 document.querySelectorAll('.video-card').forEach((card) => {
   card.addEventListener('click', () => {
     const videoId = card.dataset.youtubeId;
     if (!videoId || videoId.includes('YOUR_VIDEO_ID')) return;
+
+    if (!bgMusic.paused) {
+      bgMusic.pause();
+      updatePlayPauseText();
+      setStatus('影片播放中，背景音樂已暫停');
+    }
 
     card.innerHTML = `
       <div class="video-embed">
@@ -1212,7 +1323,6 @@ document.querySelectorAll('.video-card').forEach((card) => {
     `;
   }, { once: true });
 });
-   
   </script>
 </body>
 </html>
