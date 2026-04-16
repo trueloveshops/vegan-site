@@ -1114,6 +1114,28 @@
     document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
 
     const bgMusic = document.getElementById('bgMusic');
+    const playlist = [
+  { src: "./mp3/song1.mp3", name: "留下一命給眾生" },
+  { src: "./mp3/song2.mp3", name: "為愛而改變" },
+  { src: "./mp3/song3.mp3", name: "一口植物蛋白一口善" }
+];
+
+let currentTrack = 0;
+
+// 初始化
+bgMusic.src = playlist[currentTrack].src;
+setStatus("正在播放：" + playlist[currentTrack].name);
+
+// 播完自動下一首
+bgMusic.addEventListener("ended", () => {
+  currentTrack++;
+  if (currentTrack >= playlist.length) currentTrack = 0;
+
+  bgMusic.src = playlist[currentTrack].src;
+  bgMusic.play();
+
+  setStatus("正在播放：" + playlist[currentTrack].name);
+});
     const musicPanel = document.getElementById('musicPanel');
     const musicToggleBtn = document.getElementById('musicToggleBtn');
     const toggleMusicBtn = document.getElementById('toggleMusicBtn');
