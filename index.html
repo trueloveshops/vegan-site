@@ -1077,7 +1077,7 @@
         <button id="playMusicBtn" class="music-btn music-btn-secondary" type="button">播放 / 暫停</button>
       </div>
       <p id="musicStatus" class="music-status">網站開啟時會嘗試播放背景音樂；若瀏覽器阻擋，請手動按播放。</p>
-      <audio id="bgMusic" loop preload="metadata" src="mp3/song1.mp3"></audio>
+      <audio id="bgMusic" loop preload="metadata" src="./mp3/song1.mp3"></audio>
     </div>
   </div>
 
@@ -1114,28 +1114,6 @@
     document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
 
     const bgMusic = document.getElementById('bgMusic');
-    const playlist = [
-  { src: "./mp3/song1.mp3", name: "留下一命給眾生" },
-  { src: "./mp3/song2.mp3", name: "為愛而改變" },
-  { src: "./mp3/song3.mp3", name: "一口植物蛋白一口善" }
-];
-
-let currentTrack = 0;
-
-// 初始化
-bgMusic.src = playlist[currentTrack].src;
-setStatus("正在播放：" + playlist[currentTrack].name);
-
-// 播完自動下一首
-bgMusic.addEventListener("ended", () => {
-  currentTrack++;
-  if (currentTrack >= playlist.length) currentTrack = 0;
-
-  bgMusic.src = playlist[currentTrack].src;
-  bgMusic.play();
-
-  setStatus("正在播放：" + playlist[currentTrack].name);
-});
     const musicPanel = document.getElementById('musicPanel');
     const musicToggleBtn = document.getElementById('musicToggleBtn');
     const toggleMusicBtn = document.getElementById('toggleMusicBtn');
@@ -1155,13 +1133,40 @@ bgMusic.addEventListener("ended", () => {
     const tryPlayMusic = async () => {
       try {
         await bgMusic.play();
-        setStatus('背景音樂播放中，可隨時手動關閉。');
+        setStatus('目前歌曲：' + playlist[currentTrack].name + '。');
       } catch (error) {
         setStatus('瀏覽器目前阻擋自動播放，請按「播放 / 暫停」開始播放。');
       }
     };
 
+    const playlist = [
+      { src: "./mp3/song1.mp3", name: "留下一命給眾生" },
+      { src: "./mp3/song2.mp3", name: "為愛而改變" },
+      { src: "./mp3/song3.mp3", name: "一口植物蛋白一口善" }
+    ];
+    let currentTrack = 0;
+
+    const loadTrack = (index) => {
+      currentTrack = index;
+      bgMusic.src = playlist[currentTrack].src;
+      setStatus('目前歌曲：' + playlist[currentTrack].name + '。若瀏覽器阻擋自動播放，請按「播放 / 暫停」。');
+    };
+
+    bgMusic.addEventListener('ended', async () => {
+      const nextIndex = (currentTrack + 1) % playlist.length;
+      loadTrack(nextIndex);
+      if (musicEnabled) {
+        try {
+          await bgMusic.play();
+          setStatus('目前歌曲：' + playlist[currentTrack].name + '。');
+        } catch (error) {
+          setStatus('已切換到：' + playlist[currentTrack].name + '。請按「播放 / 暫停」開始播放。');
+        }
+      }
+    });
+
     bgMusic.volume = 0.4;
+    loadTrack(0);
     updateToggleText();
 
     toggleMusicBtn.addEventListener('click', async () => {
