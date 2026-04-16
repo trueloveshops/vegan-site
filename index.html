@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>這一口，是誰的一生？</title>
+  <style>
+    :root {
+      --bg: #f3efe6;
+      --green: #7ea33d;
+      --green-dark: #56752a;
+      --green-soft: #97be4b;
+      --text: #1f1b16;
+      --muted: #6b655f;
+      --cream: #f7f3ea;
+      --shadow: 0 12px 30px rgba(0,0,0,0.12);
+      --radius: 24px;
+      --max: 1200px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.65;
+    }
+
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+
+    .container {
+      width: min(calc(100% - 32px), var(--max));
+      margin: 0 auto;
+    }
+
+    .site-header {
+      position: absolute;
+      inset: 0 0 auto 0;
+      z-index: 50;
+      padding: 18px 0;
+    }
+
+    .nav-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .brand-mark {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #91bf47, #4b6e22);
+      display: grid;
+      place-items: center;
+      box-shadow: var(--shadow);
+      flex: 0 0 auto;
+      overflow: hidden;
+    }
+
+    .brand-mark svg {
+      width: 22px;
+      height: 22px;
+      fill: white;
+    }
+
+    .nav {
+      display: flex;
+      gap: 28px;
+      align-items: center;
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .nav a { opacity: 0.95; }
+    .nav a:hover { opacity: 1; }
+
+    .nav-cta {
+      background: rgba(126, 163, 61, 0.95);
+      color: #fff;
+      padding: 12px 22px;
+      border-radius: 999px;
+      font-weight: 800;
+    }
+
+    .hero {
+      position: relative;
+      min-height: 92vh;
+      color: #fff;
+      overflow: hidden;
+      background:
+        linear-gradient(90deg, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.6) 38%, rgba(0,0,0,0.2) 72%, rgba(0,0,0,0.15) 100%),
+        url('images/hero-pig.jpg') center/cover no-repeat;
+    }
+
+    .hero-inner {
+      min-height: 92vh;
+      display: flex;
+      align-items: center;
+      padding: 120px 0 72px;
+    }
+
+    .hero-copy {
+      max-width: 620px;
+      padding-bottom: 20px;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 16px;
+      padding: 8px 14px;
+      border: 1px solid rgba(255,255,255,0.26);
+      border-radius: 999px;
+      backdrop-filter: blur(8px);
+      font-size: 14px;
+      font-weight: 700;
+      opacity: 0;
+      transform: translateY(18px);
+      animation: heroFade 0.9s ease forwards;
+      animation-delay: 0.05s;
+    }
+
+    h1 {
+      margin: 0 0 16px;
+      font-size: clamp(48px, 8vw, 92px);
+      line-height: 1.03;
+      letter-spacing: 0.2px;
+      opacity: 0;
+      transform: translateY(18px);
+      animation: heroFade 0.9s ease forwards;
+      animation-delay: 0.18s;
+    }
+
+    .hero p {
+      font-size: clamp(20px, 2.2vw, 28px);
+      color: rgba(255,255,255,0.94);
+      margin: 0 0 28px;
+      line-height: 1.5;
+      opacity: 0;
+      transform: translateY(18px);
+      animation: heroFade 0.9s ease forwards;
+      animation-delay: 0.32s;
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 15px 24px;
+      border-radius: 999px;
+      font-weight: 800;
+      border: none;
+      cursor: pointer;
+      transition: 0.2s ease;
+      font-size: 16px;
+      opacity: 0;
+      transform: translateY(18px);
+      animation: heroFade 0.9s ease forwards;
+      animation-delay: 0.46s;
+    }
+
+    .btn-primary {
+      background: var(--green);
+      color: #fff;
+    }
+
+    .btn-primary:hover { background: var(--green-dark); }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.2);
+      backdrop-filter: blur(8px);
+    }
+
+    .fade-up {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s ease;
+    }
+
+    .fade-up.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes heroFade {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .section {
+      padding: 78px 0;
+    }
+
+    .section-title {
+      margin: 0 0 14px;
+      font-size: clamp(32px, 4vw, 50px);
+      line-height: 1.2;
+    }
+
+    .section-title .accent { color: #b44f44; }
+
+    .section-subtitle {
+      margin: 0 0 34px;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .compare-grid,
+    .food-grid,
+    .video-grid,
+    .impact-grid {
+      display: grid;
+      gap: 22px;
+    }
+
+    .compare-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .card {
+      background: #fff;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .compare-card { overflow: hidden; }
+
+    .compare-visual {
+      position: relative;
+      height: 390px;
+      background: #ddd;
+    }
+
+    .compare-base,
+    .compare-overlay {
+      position: absolute;
+      inset: 0;
+    }
+
+    .compare-base img,
+    .compare-overlay img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .compare-overlay {
+      width: 50%;
+      overflow: hidden;
+      border-right: 3px solid rgba(255,255,255,0.95);
+    }
+
+    .compare-handle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.98);
+      display: grid;
+      place-items: center;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.22);
+      font-weight: 900;
+      font-size: 20px;
+      z-index: 4;
+      pointer-events: none;
+    }
+
+    .compare-range {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: ew-resize;
+      z-index: 5;
+    }
+
+    .overlay-copy {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 3;
+      padding: 28px 22px 24px;
+      color: #fff;
+      font-size: clamp(26px, 2.5vw, 36px);
+      font-weight: 900;
+      line-height: 1.2;
+      letter-spacing: 0.2px;
+      background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.82) 100%);
+      text-shadow: 0 2px 8px rgba(0,0,0,0.45);
+    }
+
+    .card-note {
+      padding: 14px 18px 18px;
+      color: var(--muted);
+      font-size: 15px;
+      text-align: center;
+    }
+
+    .banner {
+      position: relative;
+      color: #fff;
+      padding: 88px 0;
+      background:
+        linear-gradient(90deg, rgba(0,0,0,0.86), rgba(0,0,0,0.58)),
+        url('images/banner-emotion.jpg') center/cover no-repeat;
+    }
+.banner-title {
+  max-width: 980px;
+  margin: 0;
+  font-size: clamp(30px, 3.5vw, 44px);
+  line-height: 1.2;
+}
+    .impact {
+      background: linear-gradient(180deg, #f5f1e8 0%, #eef3df 100%);
+    }
+
+    .impact-wrap {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .impact-grid {
+      grid-template-columns: repeat(3, 1fr);
+      margin-top: 28px;
+    }
+
+    .impact-item {
+      background: rgba(255,255,255,0.72);
+      border-radius: var(--radius);
+      padding: 22px;
+      min-height: 180px;
+    }
+
+    .impact-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: rgba(126,163,61,0.12);
+      display: grid;
+      place-items: center;
+    }
+
+    .impact-icon svg {
+      width: 28px;
+      height: 28px;
+      fill: #56752a;
+    }
+
+    .impact-item h3 {
+      margin: 0 0 8px;
+      font-size: 28px;
+    }
+
+    .impact-item p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .rounded-photo {
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      min-height: 420px;
+    }
+
+    .rounded-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .choices {
+      background: var(--cream);
+    }
+
+    .choices-wrap {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .bullet-list {
+      display: grid;
+      gap: 14px;
+      margin: 28px 0 28px;
+    }
+
+    .bullet {
+      display: flex;
+      gap: 12px;
+      align-items: start;
+      font-size: 18px;
+    }
+
+    .tick {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(126,163,61,0.16);
+      color: var(--green-dark);
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      font-weight: 900;
+    }
+
+    .food-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 22px;
+  align-items: stretch;
+}
+
+    .food-card {
+      background: #fff;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+    }
+
+   .food-card {
+  background: #fff;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+}
+
+.food-card .food-image-wrap {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+.food-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+    .food-card p {
+      margin: 0;
+      padding: 14px 12px 18px;
+      text-align: center;
+      font-weight: 800;
+      font-size: 20px;
+      line-height: 1.4;
+    }
+
+    .cta-band {
+      position: relative;
+      color: #fff;
+      padding: 60px 0;
+      background:
+        linear-gradient(90deg, rgba(10,27,12,0.88), rgba(22,52,23,0.72)),
+        url('images/forest-bg.jpg') center/cover no-repeat;
+    }
+
+    .cta-wrap {
+      text-align: center;
+      max-width: 780px;
+      margin: 0 auto;
+    }
+
+    .cta-wrap p {
+      margin: 0;
+      color: rgba(255,255,255,0.88);
+      font-size: 20px;
+    }
+
+    .music-panel {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 80;
+      width: 280px;
+      background: rgba(19, 33, 20, 0.96);
+      color: #fff;
+      border-radius: 18px;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.25);
+      overflow: hidden;
+      backdrop-filter: blur(14px);
+      transform: translateY(120%);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+    }
+
+    .music-panel.open {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .music-toggle {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 90;
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: var(--green-soft);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.28);
+      cursor: pointer;
+      border: none;
+    }
+
+    .music-toggle svg {
+      width: 24px;
+      height: 24px;
+      fill: #fff;
+    }
+
+    .music-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 14px 16px 10px;
+    }
+
+    .music-title {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 900;
+      line-height: 1.25;
+    }
+
+    .music-sub {
+      margin: 2px 0 0;
+      font-size: 12px;
+      color: rgba(255,255,255,0.72);
+    }
+
+    .music-body {
+      padding: 0 16px 16px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .music-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .music-btn {
+      border: none;
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .music-btn-primary {
+      background: var(--green);
+      color: #fff;
+    }
+
+    .music-btn-secondary {
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.14);
+    }
+
+    .music-status {
+      margin: 0;
+      min-height: 20px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.8);
+    }
+
+    .videos {
+      background: #f7f1e7;
+    }
+
+    .videos-wrap {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .video-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      align-items: start;
+    }
+
+    .video-card {
+      background: #fff;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      max-width: 260px;
+      width: 100%;
+      justify-self: center;
+      cursor: pointer;
+    }
+
+    .thumb {
+      position: relative;
+    }
+
+    .thumb img {
+      width: 100%;
+      aspect-ratio: 9 / 16;
+      object-fit: cover;
+    }
+
+    .play {
+      position: absolute;
+      inset: 50% auto auto 50%;
+      transform: translate(-50%, -50%);
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.9);
+      display: grid;
+      place-items: center;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+
+    .play svg {
+      width: 26px;
+      height: 26px;
+      margin-left: 3px;
+      fill: #1f1b16;
+    }
+
+    .video-meta {
+      padding: 14px;
+    }
+
+    .video-title {
+      margin: 0 0 6px;
+      font-weight: 800;
+      font-size: 19px;
+    }
+
+    .video-time {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .video-embed {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 9 / 16;
+      background: #000;
+    }
+
+    .video-embed iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .site-footer {
+      background: linear-gradient(180deg, #18301b 0%, #0f1f12 100%);
+      color: rgba(255,255,255,0.92);
+      padding: 34px 0;
+      text-align: center;
+    }
+
+    .footer-wrap {
+      display: grid;
+      place-items: center;
+      gap: 8px;
+    }
+
+    .footer-title {
+      margin: 0;
+      font-weight: 900;
+      font-size: clamp(22px, 3vw, 34px);
+      line-height: 1.25;
+      text-align: center;
+    }
+
+    .footer-channel {
+      font-size: 13px;
+      color: rgba(255,255,255,0.72);
+    }
+
+    @media (max-width: 1100px) {
+      .compare-grid,
+      .impact-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .food-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .video-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .impact-wrap,
+      .choices-wrap,
+      .videos-wrap {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .nav { display: none; }
+      .hero { min-height: auto; }
+      .hero-inner { min-height: auto; padding: 110px 0 56px; }
+      .compare-grid,
+      .impact-grid,
+      .food-grid {
+        grid-template-columns: 1fr;
+      }
+      .video-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+      }
+      .video-card {
+        max-width: 220px;
+      }
+      .compare-visual { height: 360px; }
+      .overlay-copy {
+        font-size: 34px;
+        padding: 32px 20px 24px;
+      }
+      h1 { font-size: 56px; }
+      .section-title { font-size: 34px; }
+      .hero p { font-size: 22px; }
+    }
+
+    @media (max-width: 480px) {
+      .music-panel {
+        right: 10px;
+        bottom: 10px;
+        width: calc(100vw - 20px);
+      }
+
+      .container {
+        width: min(calc(100% - 20px), var(--max));
+      }
+      .hero-inner {
+        padding: 96px 0 46px;
+      }
+      h1 {
+        font-size: 48px;
+      }
+      .hero p {
+        font-size: 20px;
+      }
+      .overlay-copy {
+        font-size: 30px;
+        line-height: 1.18;
+        padding: 26px 16px 20px;
+      }
+      .compare-visual {
+        height: 320px;
+      }
+      .impact-item h3 {
+        font-size: 24px;
+      }
+      .video-grid {
+        grid-template-columns: 1fr;
+      }
+      .video-card {
+        max-width: 280px;
+      }
+      .footer-title {
+        font-size: 20px;
+        line-height: 1.35;
+        padding: 0 8px;
+      }
+      .footer-channel {
+        font-size: 12px;
+      }
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a href="#top" class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M12 21s-6.7-4.35-9.33-8.12C.27 9.48 1.1 5.48 4.44 3.8c2.3-1.16 4.75-.4 6.1 1.28 1.35-1.68 3.8-2.44 6.1-1.28 3.34 1.68 4.17 5.68 1.77 9.08C18.7 16.65 12 21 12 21z"/></svg>
+        </span>
+        <span>
+          一口善意<br>
+          <small style="font-weight:500;opacity:.82;">為生命、為地球、為自己</small>
+        </span>
+      </a>
+      <nav class="nav">
+  <a href="#impact">影響</a>
+  <a href="#food">植物飲食</a>
+  <a href="#videos">影片</a>
+  <a class="nav-cta" href="#food">了解更多</a>
+</nav>
+    </div>
+  </header>
+
+  <section class="hero" id="top">
+    <div class="container hero-inner">
+      <div class="hero-copy">
+        <span class="eyebrow">看完這 30 秒，再決定要不要吃</span>
+        <h1>這一口<br>是誰的一生？</h1>
+        <p>你以為你在吃食物，<br>其實你在吞下一個曾經想活下去的生命。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section fade-up" id="truth">
+    <div class="container">
+      <h2 class="section-title">你看到的是 <span class="accent">食物</span>，他經歷的是 <span class="accent">一生</span></h2>
+      <p class="section-subtitle">左右拖曳圖片看看，盤中的那一口，原本是誰。</p>
+      <div class="compare-grid">
+        <article class="card compare-card">
+          <div class="compare-visual" data-compare>
+            <div class="compare-base">
+              <img src="images/pork-food.jpg" alt="豬肉">
+            </div>
+            <div class="compare-overlay" data-overlay>
+              <img src="images/pig-live.jpg" alt="小豬">
+            </div>
+            <div class="overlay-copy">他不是食物，<br>是被變成食物。</div>
+            <div class="compare-handle" data-handle>↔</div>
+            <input class="compare-range" type="range" min="0" max="100" value="50" aria-label="豬與豬肉對比滑桿">
+          </div>
+          <div class="card-note">他還沒來得及長大，就先被做成你盤中的一餐。</div>
+        </article>
+
+        <article class="card compare-card">
+          <div class="compare-visual" data-compare>
+            <div class="compare-base">
+              <img src="images/fried-chicken-food.jpg" alt="炸雞">
+            </div>
+            <div class="compare-overlay" data-overlay>
+              <img src="images/chicken-live.jpg" alt="雞">
+            </div>
+            <div class="overlay-copy">他昨天還活著，<br>今天變成你的晚餐。</div>
+            <div class="compare-handle" data-handle>↔</div>
+            <input class="compare-range" type="range" min="0" max="100" value="50" aria-label="雞與炸雞對比滑桿">
+          </div>
+          <div class="card-note">不是雞肉而已，他原本也只是想活下去。</div>
+        </article>
+
+        <article class="card compare-card">
+          <div class="compare-visual" data-compare>
+            <div class="compare-base">
+              <img src="images/steak-food.jpg" alt="牛排">
+            </div>
+            <div class="compare-overlay" data-overlay>
+              <img src="images/cow-live.jpg" alt="牛">
+            </div>
+            <div class="overlay-copy">他不是牛排，<br>他只是想活下去。</div>
+            <div class="compare-handle" data-handle>↔</div>
+            <input class="compare-range" type="range" min="0" max="100" value="50" aria-label="牛與牛排對比滑桿">
+          </div>
+          <div class="card-note">多看一秒，也許就不再只是把他當成一塊肉。</div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="banner fade-up">
+    <div class="container">
+     <h2 class="section-title banner-title">如果換成是你，你會願意被這樣對待嗎？</h2>
+    </div>
+  </section>
+
+  <section class="section impact fade-up" id="impact">
+    <div class="container impact-wrap">
+      <div>
+        <h2 class="section-title">你的選擇，帶來巨大的改變</h2>
+        <p class="section-subtitle">少一份需求，就少一份傷害。每一餐，都是一次投票。</p>
+        <div class="impact-grid">
+          <div class="impact-item">
+            <div class="impact-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 21s-6.7-4.35-9.33-8.12C.27 9.48 1.1 5.48 4.44 3.8c2.3-1.16 4.75-.4 6.1 1.28 1.35-1.68 3.8-2.44 6.1-1.28 3.34 1.68 4.17 5.68 1.77 9.08C18.7 16.65 12 21 12 21z"/>
+              </svg>
+            </div>
+            <h3>健康</h3>
+            <p>降低心血管、糖尿病與肥胖風險，改善腸道健康。</p>
+          </div>
+          <div class="impact-item">
+            <div class="impact-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 2c1.93 0 3.68.78 4.95 2.05L14 8v2h-4v2l-2 2H6.05A8 8 0 0112 4zm0 16a8 8 0 01-7.75-6H8l2-2h4v2l2 2h2.75A8 8 0 0112 20z"/>
+              </svg>
+            </div>
+            <h3>地球</h3>
+            <p>減少森林砍伐與溫室氣體排放，降低水資源消耗，保護生物多樣性。</p>
+          </div>
+          <div class="impact-item">
+            <div class="impact-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M10 8a2 2 0 11-4 0 2 2 0 014 0zm6 0a2 2 0 11-4 0 2 2 0 014 0zm-6 4a2 2 0 11-4 0 2 2 0 014 0zm6 4c0 1.66-2.24 3-5 3s-5-1.34-5-3 2.24-3 5-3 5 1.34 5 3z"/>
+              </svg>
+            </div>
+            <h3>生命</h3>
+            <p>少一份需求，就少一份宰殺；少一餐，就多一條命。</p>
+          </div>
+        </div>
+      </div>
+      <div class="rounded-photo">
+        <img src="images/plant.jpg" alt="手捧植物">
+      </div>
+    </div>
+  </section>
+
+  <section class="section choices fade-up" id="food">
+    <div class="container choices-wrap">
+      <div>
+        <h2 class="section-title">你不需要放棄美味，<br>只需要換一種選擇</h2>
+        <div class="bullet-list">
+          <div class="bullet"><span class="tick">✓</span><span>黃豆、藜麥、豆腐，提供完整又穩定的植物蛋白。</span></div>
+          <div class="bullet"><span class="tick">✓</span><span>植物肉、菇類、豆製品，也能帶來熟悉的口感與飽足感。</span></div>
+          <div class="bullet"><span class="tick">✓</span><span>素食料理更清爽，也能做得精緻、豐富、好吃。</span></div>
+        </div>
+        <a class="btn btn-primary" href="#videos" style="opacity:1;transform:none;animation:none;">一樣好吃，但沒有傷害</a>
+      </div>
+
+      <div class="food-grid">
+        <a href="https://vegevegan.lovinghut.com/Default.asp?lang=tw" target="_blank" class="food-card">
+          <img src="images/food1.jpg" alt="純素購物">
+          <p>純素購物</p>
+        </a>
+
+        <div class="food-card">
+  <div class="food-image-wrap">
+    <img src="images/nutrition1.jpg" alt="蛋白質比較">
+  </div>
+  <p>蛋白質比較</p>
+</div>
+
+        <div class="food-card">
+  <div class="food-image-wrap">
+    <img src="images/nutrition2.jpg" alt="鐵質比較">
+  </div>
+  <p>鐵質比較</p>
+</div>
+
+        <div class="food-card">
+  <div class="food-image-wrap">
+    <img src="images/nutrition3.jpg" alt="鈣質比較">
+  </div>
+  <p>鈣質比較</p>
+</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-band fade-up">
+    <div class="container cta-wrap">
+      <h2 class="section-title" style="margin:0 0 6px;">你不需要完美，只需要一個開始</h2>
+      <p>這一餐，讓他活下來。也是讓你的選擇，變得更溫柔一點。</p>
+    </div>
+  </section>
+
+  <section class="section videos fade-up" id="videos">
+    <div class="container videos-wrap">
+      <div>
+        <h2 class="section-title">想了解更多？<br>看這些短影片會更有感</h2>
+        <p class="section-subtitle">點縮圖後會直接在頁面播放 YouTube，不會跳去別頁。</p>
+      </div>
+      <div class="video-grid">
+        <article class="video-card" data-youtube-id="YOUR_VIDEO_ID_1">
+          <div class="thumb">
+            <img src="images/video1.jpg" alt="影片縮圖 1">
+            <span class="play" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </span>
+          </div>
+          <div class="video-meta">
+            <p class="video-title">他的眼神，你真的看見了嗎？</p>
+            <p class="video-time">2:15</p>
+          </div>
+        </article>
+
+        <article class="video-card" data-youtube-id="YOUR_VIDEO_ID_2">
+          <div class="thumb">
+            <img src="images/video2.jpg" alt="影片縮圖 2">
+            <span class="play" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </span>
+          </div>
+          <div class="video-meta">
+            <p class="video-title">雞，不只是雞肉</p>
+            <p class="video-time">1:48</p>
+          </div>
+        </article>
+
+        <article class="video-card" data-youtube-id="YOUR_VIDEO_ID_3">
+          <div class="thumb">
+            <img src="images/video3.jpg" alt="影片縮圖 3">
+            <span class="play" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </span>
+          </div>
+          <div class="video-meta">
+            <p class="video-title">一杯牛奶的代價</p>
+            <p class="video-time">2:03</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <button class="music-toggle" id="musicToggleBtn" aria-label="開啟背景音樂控制">
+    <svg viewBox="0 0 24 24"><path d="M12 3v10.55A4 4 0 1 0 14 17V8.64l6-1.2V13a4 4 0 1 0 2 3.45V5z"/></svg>
+  </button>
+
+  <div class="music-panel" id="musicPanel">
+    <div class="music-head">
+      <div>
+        <p class="music-title">背景音樂</p>
+        <p class="music-sub">可播放、暫停，預設放一首最穩定</p>
+      </div>
+      <span aria-hidden="true">♪</span>
+    </div>
+    <div class="music-body">
+      <div class="music-actions">
+        <button id="toggleMusicBtn" class="music-btn music-btn-primary" type="button">關閉音樂</button>
+        <button id="playMusicBtn" class="music-btn music-btn-secondary" type="button">播放 / 暫停</button>
+      </div>
+      <p id="musicStatus" class="music-status">網站開啟時會嘗試播放背景音樂；若瀏覽器阻擋，請手動按播放。</p>
+      <audio id="bgMusic" loop preload="metadata" src="audio/song1.mp3"></audio>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container footer-wrap">
+      <p class="footer-title">一個選擇<br>改變一個生命的結局</p>
+      <a class="footer-channel" href="https://www.youtube.com/@truelovevegan9" target="_blank" rel="noopener noreferrer">守護生命的音樂</a>
+    </div>
+  </footer>
+
+  <script>
+    document.querySelectorAll('[data-compare]').forEach((card) => {
+      const range = card.querySelector('.compare-range');
+      const overlay = card.querySelector('[data-overlay]');
+      const handle = card.querySelector('[data-handle]');
+
+      const updateCompare = (value) => {
+        overlay.style.width = value + '%';
+        handle.style.left = value + '%';
+      };
+
+      updateCompare(range.value);
+      range.addEventListener('input', (e) => updateCompare(e.target.value));
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('show');
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
+
+    const bgMusic = document.getElementById('bgMusic');
+    const musicPanel = document.getElementById('musicPanel');
+    const musicToggleBtn = document.getElementById('musicToggleBtn');
+    const toggleMusicBtn = document.getElementById('toggleMusicBtn');
+    const playMusicBtn = document.getElementById('playMusicBtn');
+    const musicStatus = document.getElementById('musicStatus');
+
+    let musicEnabled = true;
+
+    const setStatus = (text) => {
+      musicStatus.textContent = text;
+    };
+
+    const updateToggleText = () => {
+      toggleMusicBtn.textContent = musicEnabled ? '關閉音樂' : '開啟音樂';
+    };
+
+    const tryPlayMusic = async () => {
+      try {
+        await bgMusic.play();
+        setStatus('背景音樂播放中，可隨時手動關閉。');
+      } catch (error) {
+        setStatus('瀏覽器目前阻擋自動播放，請按「播放 / 暫停」開始播放。');
+      }
+    };
+
+    bgMusic.volume = 0.4;
+    updateToggleText();
+
+    toggleMusicBtn.addEventListener('click', async () => {
+      musicEnabled = !musicEnabled;
+      updateToggleText();
+
+      if (musicEnabled) {
+        await tryPlayMusic();
+      } else {
+        bgMusic.pause();
+        setStatus('背景音樂已關閉。');
+      }
+    });
+
+    playMusicBtn.addEventListener('click', async () => {
+      if (bgMusic.paused) {
+        musicEnabled = true;
+        updateToggleText();
+        await tryPlayMusic();
+      } else {
+        bgMusic.pause();
+        setStatus('背景音樂已暫停。');
+      }
+    });
+
+    musicToggleBtn.addEventListener('click', () => {
+      musicPanel.classList.toggle('open');
+    });
+
+    window.addEventListener('click', async () => {
+      if (bgMusic.paused && musicEnabled) {
+        tryPlayMusic();
+      }
+    }, { once: true });
+
+    document.querySelectorAll('.video-card').forEach((card) => {
+      card.addEventListener('click', () => {
+        const videoId = card.dataset.youtubeId;
+        if (!videoId || videoId.includes('YOUR_VIDEO_ID')) return;
+
+        card.innerHTML = `
+          <div class="video-embed">
+            <iframe
+              src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0"
+              title="YouTube video player"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen>
+            </iframe>
+          </div>
+        `;
+      }, { once: true });
+    });
+  </script>
+</body>
+</html>
