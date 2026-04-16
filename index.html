@@ -1113,9 +1113,9 @@
         <p class="section-subtitle">點縮圖後會直接在頁面播放 YouTube，不會跳去別頁。</p>
       </div>
       <div class="video-grid">
-        <article class="video-card" data-youtube-id="YOUR_VIDEO_ID_1">
+        <article class="video-card" data-youtube-id="etwTwAPV64U">
           <div class="thumb">
-            <img src="images/video1.jpg" alt="影片縮圖 1">
+            <img src="https://img.youtube.com/vi/etwTwAPV64U/hqdefault.jpg" alt="影片縮圖 1">
             <span class="play" aria-hidden="true">
               <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
             </span>
@@ -1126,9 +1126,9 @@
           </div>
         </article>
 
-        <article class="video-card" data-youtube-id="YOUR_VIDEO_ID_2">
+        <article class="video-card" data-youtube-id="etwTwAPV64U">
           <div class="thumb">
-            <img src="images/video2.jpg" alt="影片縮圖 2">
+            <img src="https://img.youtube.com/vi/etwTwAPV64U/hqdefault.jpg" alt="影片縮圖 2">
             <span class="play" aria-hidden="true">
               <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
             </span>
@@ -1139,9 +1139,9 @@
           </div>
         </article>
 
-        <article class="video-card" data-youtube-id="YOUR_VIDEO_ID_3">
+        <article class="video-card" data-youtube-id="etwTwAPV64U">
           <div class="thumb">
-            <img src="images/video3.jpg" alt="影片縮圖 3">
+            <img src="https://img.youtube.com/vi/etwTwAPV64U/hqdefault.jpg" alt="影片縮圖 3">
             <span class="play" aria-hidden="true">
               <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
             </span>
@@ -1222,9 +1222,9 @@ const trackSelect = document.getElementById('trackSelect');
 const playPauseBtn = document.getElementById('playPauseBtn');
 
 const playlist = [
-  { src: "./mp3/song1.mp3", name: "留下一命給眾生" },
-  { src: "./mp3/song2.mp3", name: "為愛而改變" },
-  { src: "./mp3/song3.mp3", name: "一口植物蛋白一口善" }
+  { src: "mp3/song1.mp3", name: "留下一命給眾生" },
+  { src: "mp3/song2.mp3", name: "為愛而改變" },
+  { src: "mp3/song3.mp3", name: "一口植物蛋白一口善" }
 ];
 
 let currentTrack = 0;
@@ -1290,7 +1290,7 @@ bgMusic.addEventListener('play', updatePlayPauseText);
 bgMusic.addEventListener('pause', updatePlayPauseText);
 
 bgMusic.addEventListener('error', () => {
-  setStatus('音樂檔讀取失敗，請確認 ./mp3/song1.mp3 等路徑是否存在');
+  setStatus('音樂檔讀取失敗，請確認 mp3/song1.mp3 等路徑是否存在');
 });
 
 bgMusic.addEventListener('ended', async () => {
