@@ -327,36 +327,13 @@
       text-align: center;
     }
 
-  .banner {
+.banner {
   position: relative;
   color: #fff;
   padding: 88px 0;
-  overflow: hidden;
-  background: none;
-}
-
-/* 圖片層（保證手機一定顯示） */
-.banner::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: url("images/banner-emotion.jpg") center center / cover no-repeat;
-  z-index: 0;
-}
-
-/* 遮罩層 */
-.banner::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, rgba(0,0,0,0.55), rgba(0,0,0,0.25));
-  z-index: 1;
-}
-
-/* 文字層 */
-.banner .container {
-  position: relative;
-  z-index: 2;
+  background:
+    linear-gradient(90deg, rgba(0,0,0,0.55), rgba(0,0,0,0.25)),
+    url('./images/banner-emotion.jpg') center / cover no-repeat;
 }
 
 .banner-title {
@@ -365,6 +342,7 @@
   font-size: clamp(30px, 3.5vw, 44px);
   line-height: 1.2;
 }
+
 @media (max-width: 760px) {
   .banner {
     padding: 56px 0;
