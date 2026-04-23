@@ -365,12 +365,13 @@
   font-size: clamp(30px, 3.5vw, 44px);
   line-height: 1.2;
 }
-
-/* 手機優化 */
 @media (max-width: 760px) {
   .banner {
     padding: 56px 0;
-    min-height: 180px;
+    min-height: 200px;
+    background:
+      linear-gradient(90deg, rgba(0,0,0,0.55), rgba(0,0,0,0.25)),
+      url('./images/banner-emotion.jpg') center / cover no-repeat !important;
   }
 
   .banner .container {
@@ -378,32 +379,13 @@
     padding-right: 16px;
   }
 
-  .banner::before {
-    background-position: center center;
-    background-size: cover;
-  }
-}
-
-/* 🔥 只修手機，不動桌機 */
-@media (max-width: 760px) {
-  .banner {
-    background:
-      linear-gradient(90deg, rgba(0,0,0,0.55), rgba(0,0,0,0.25)),
-      url("images/banner-emotion.jpg") !important;
-
-    background-position: center center !important;
-    background-size: cover !important;
-    background-repeat: no-repeat !important;
-
-    min-height: 200px;
-  }
-
-  /* 🔥 防止 fade-up 把它藏起來 */
   .banner.fade-up {
     opacity: 1 !important;
     transform: none !important;
+    transition: none !important;
   }
 }
+
     .impact {
       background: linear-gradient(180deg, #f5f1e8 0%, #eef3df 100%);
     }
