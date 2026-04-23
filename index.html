@@ -335,8 +335,7 @@
     linear-gradient(90deg, rgba(0,0,0,0.55), rgba(0,0,0,0.25)),
     url('images/banner-emotion.jpg') center/cover no-repeat;
 }
-    }
-.banner-title {
+    .banner-title {
   max-width: 980px;
   margin: 0;
   font-size: clamp(30px, 3.5vw, 44px);
@@ -359,20 +358,24 @@
     }
 
     .impact-item {
-      background: rgba(255,255,255,0.72);
-      border-radius: var(--radius);
-      padding: 22px;
-      min-height: 180px;
-    }
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(255,255,255,0.72);
+  border-radius: var(--radius);
+  padding: 20px;
+}
 
     .impact-icon {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background: rgba(126,163,61,0.12);
-      display: grid;
-      place-items: center;
-    }
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: rgba(126,163,61,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
     .impact-icon svg {
       width: 28px;
@@ -380,16 +383,18 @@
       fill: #56752a;
     }
 
-    .impact-item h3 {
-      margin: 0 0 8px;
-      font-size: 28px;
-    }
+    .impact-text h3 {
+  margin: 0 0 4px;
+  font-size: 32px;
+  font-weight: 900;
+}
 
-    .impact-item p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 16px;
-    }
+    .impact-text p {
+  margin: 0;
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.5;
+}
 
     .rounded-photo {
       border-radius: 28px;
@@ -811,9 +816,11 @@
       .compare-visual {
         height: 320px;
       }
-      .impact-item h3 {
-        font-size: 24px;
-      }
+      .impact-text h3 {
+  margin: 0 0 4px;
+  font-size: 32px;
+  font-weight: 900;
+}
       .video-grid {
         grid-template-columns: 1fr;
       }
@@ -1042,8 +1049,8 @@
                 <path d="M12 21s-6.7-4.35-9.33-8.12C.27 9.48 1.1 5.48 4.44 3.8c2.3-1.16 4.75-.4 6.1 1.28 1.35-1.68 3.8-2.44 6.1-1.28 3.34 1.68 4.17 5.68 1.77 9.08C18.7 16.65 12 21 12 21z"/>
               </svg>
             </div>
-            </h3>健康</h3>
-            <p>植物飲食有助降低心血管、慢性病、糖尿病與肥胖風險，能改善腸道健康。</p>
+            <div class="impact-text"><h3>健康</h3>
+            <p>植物飲食有助降低心血管、慢性病、糖尿病與肥胖風險，能改善腸道健康。</p></div>
           </div>
           <div class="impact-item">
             <div class="impact-icon">
@@ -1051,8 +1058,8 @@
                 <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 2c1.93 0 3.68.78 4.95 2.05L14 8v2h-4v2l-2 2H6.05A8 8 0 0112 4zm0 16a8 8 0 01-7.75-6H8l2-2h4v2l2 2h2.75A8 8 0 0112 20z"/>
               </svg>
             </div>
-           </h3>地球</h3>
-            <p>每一餐，都能替地球降溫。<br>減少森林砍伐與溫室氣體排放，降低水資源消耗，保護生物多樣性。</p>
+           <div class="impact-text"><h3>地球</h3>
+            <p>每一餐，都能替地球降溫。<br>減少森林砍伐與溫室氣體排放，降低水資源消耗，保護生物多樣性。</p></div>
           </div>
           <div class="impact-item">
             <div class="impact-icon">
@@ -1060,8 +1067,8 @@
                 <path d="M10 8a2 2 0 11-4 0 2 2 0 014 0zm6 0a2 2 0 11-4 0 2 2 0 014 0zm-6 4a2 2 0 11-4 0 2 2 0 014 0zm6 4c0 1.66-2.24 3-5 3s-5-1.34-5-3 2.24-3 5-3 5 1.34 5 3z"/>
               </svg>
             </div>
-           </h3>生命</h3>
-            <p>終結畜牧業的無盡剝削，喚醒生命平等之心，每一餐選擇，皆是對弱小生靈的慈悲守護。</p>
+           <div class="impact-text"><h3>生命</h3>
+            <p>終結畜牧業的無盡剝削，喚醒生命平等之心，每一餐選擇，皆是對弱小生靈的慈悲守護。</p></div>
           </div>
         </div>
       </div>
