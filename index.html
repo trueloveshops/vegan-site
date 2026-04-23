@@ -1087,7 +1087,38 @@
           <div class="bullet"><span class="tick">✓</span><span>熟悉的口感與飽足感，其實不用來自動物。 </span></div>
           <div class="bullet"><span class="tick">✓</span><span>素食一樣可以非常豐盛、美味，而且更清爽。</span></div>
         </div>
-        <a class="btn btn-primary" href="#videos" style="opacity:1;transform:none;animation:none;">美味，不需要殘忍</a>
+       /* 🔥 CTA 強化版 */
+.btn-cta {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.25s ease;
+}
+
+/* 發光效果 */
+.btn-cta::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+/* hover 滑過亮一下 */
+.btn-cta:hover::before {
+  transform: translateX(100%);
+}
+
+/* hover 放大 + 陰影 */
+.btn-cta:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+}
+
+/* 點擊感 */
+.btn-cta:active {
+  transform: scale(0.98);
+}
       </div>
 
       <div class="food-grid">
